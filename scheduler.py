@@ -20,7 +20,14 @@ def handler(agent, json_data):
     agent.close()
 
 def main():
+    json_data=[]
+    with open('input.json', 'r') as file:
+        for line in file:
+            line = line.split("\n")[0]
+            json_data.append(json.loads(line))
+        file.close()
 
+    json_data = [{"command": ["ls", "-l"], "timeout": 1000}]
     while True:
         agent,addr = sock.accept()
         print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)
