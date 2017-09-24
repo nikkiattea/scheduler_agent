@@ -14,9 +14,12 @@ def handler(agent, json_data):
     sock_input = agent.makefile('r')
 
     for request in json_data:
-        print 'Sending: %s' % request
-        agent.sendall(json.dumps(request))
-        print json.loads(next(sock_input))
+        while True:
+            print 'Sending: %s' % request
+            agent.sendall(json.dumps(request))
+            result = json.loads(agent.recv(4096))
+            print 'Recieved task result: %s' % result
+            break
     agent.close()
 
 def main():
@@ -33,7 +36,7 @@ def main():
         print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)
         agent_handler = threading.Thread(target=handler,args=(agent,json_data))
         agent_handler.start()
-        break
+        #break
 
 if __name__ == '__main__':
     main()
