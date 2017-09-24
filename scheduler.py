@@ -17,6 +17,7 @@ def handler(agent, json_data, outfile):
         print 'Sending: %s' % request
         agent.sendall(json.dumps(request))
         result = json.loads(agent.recv(4096))
+        print 'Recieved: %s' % result
         json_result.append(result)
     writeResults(json_result, outfile)
     agent.close()
@@ -57,6 +58,7 @@ def main():
         agent_handler = threading.Thread(target=handler,args=(agent,json_data,options.outfile))
         agent_handler.start()
         break
+    sock.close()
 
 if __name__ == '__main__':
     main()
