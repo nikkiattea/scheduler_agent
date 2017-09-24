@@ -14,7 +14,8 @@ def runCommandWithTimeout(request):
         command = request["command"]
         timeout = request["timeout"]
         startTime = time.time()
-        executed_at = str(time.ctime(int(startTime)))
+        executed_at = str(startTime)
+        #executed_at = str(time.ctime(int(startTime)))
         proc = Popen(command, stdout=PIPE, stderr=PIPE)
         kill_proc = lambda process: process.kill()
         timer = Timer(timeout, kill_proc, [proc])
