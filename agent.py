@@ -38,13 +38,13 @@ def runCommandWithTimeout(request):
     return result
 
 def main():
+    print "Waiting for scheduler to open..."
     while True:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((host, port))
             break
         except Exception, e:
-            print "Waiting for scheduler to open: %s"%str(e)
             time.sleep(1)
     running = True
     while running:
