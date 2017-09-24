@@ -16,13 +16,13 @@ An unsuccessful TaskResult is definied by the command,
 exit_code, and error.
 Returns the TaskResult.
 """
-def runCommandWithTimeout(request):
+def run_command_with_timeout(request):
     try:
         command = request["command"]
         timeout = request["timeout"]
-        startTime = time.time()
-        executed_at = str(startTime)
-        #executed_at = str(time.ctime(int(startTime)))
+        start_time = time.time()
+        executed_at = str(start_time)
+        #executed_at = str(time.ctime(int(start_time)))
         proc = Popen(command, stdout=PIPE, stderr=PIPE)
         kill_proc = lambda process: process.kill()
         timer = Timer(timeout, kill_proc, [proc])
@@ -36,8 +36,8 @@ def runCommandWithTimeout(request):
                 return result
         finally:
             timer.cancel()
-        finishTime = time.time()
-        duration_ms = (finishTime - startTime) * 100
+        finish_time = time.time()
+        duration_ms = (finish_time - start_time) * 100
         result={"command":command, "executed_at":executed_at, "duration_ms":duration_ms, "exit_code":exit_code, "output":output, "error":error}
     except Exception, e:
         error = str(e)
@@ -67,7 +67,7 @@ def main():
         try:
             request = json.loads(sock.recv(4096))
             print "Recieved: %s" % request
-            result = runCommandWithTimeout(request)
+            result = run_command_with_timeout(request)
             try:
                 print "Sending: %s" % result
                 sock.sendall(json.dumps(result))

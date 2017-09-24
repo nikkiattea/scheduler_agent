@@ -24,7 +24,7 @@ def handler(agent, json_data, outfile):
         result = json.loads(agent.recv(4096))
         print 'Recieved: %s' % result
         json_result.append(result)
-    writeResults(json_result, outfile)
+    write_results(json_result, outfile)
     agent.close()
 
 """
@@ -33,7 +33,7 @@ the json_result dictionary
 
 Default file: output.json
 """
-def writeResults(json_result, filename):
+def write_results(json_result, filename):
     if filename is None:
         filename = "output.json"
     with open(filename, 'w') as outfile:
@@ -47,7 +47,7 @@ those lines into a json dictionary
 
 Default file: input.json
 """
-def readRequests(filename):
+def read_requests(filename):
     json_data=[]
     if filename is None:
         filename = "input.json"
@@ -74,7 +74,7 @@ optional arguments:
                         path of the out file, default is out.json ex:
                         output.json
 """
-def getOptions():
+def get_options():
     parser = argparse.ArgumentParser(description='Starts the scheduler service accepting an optional input and output file')
     parser.add_argument('--infile', '-i', dest='infile', help='path of the input file, default is input.json ex: input.json')
     parser.add_argument('--outfile', '-o', dest='outfile', help='path of the out file, default is out.json ex: output.json')
@@ -90,16 +90,14 @@ return all TaskResults to the output file through
 the agent handler.
 """
 def main():
-    options = getOptions()
-    json_data = readRequests(options.infile)
+    options = get_options()
+    json_data = read_requests(options.infile)
 
-    while True:
-        print "Waiting for agent to open..."
-        agent,addr = sock.accept()
-        print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)
-        agent_handler = threading.Thread(target=handler,args=(agent,json_data,options.outfile))
-        agent_handler.start()
-        break
+    print "Waiting for agent to open..."
+    agent,addr = sock.accept()
+    print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)
+    agent_handler = threading.Thread(target=handler,args=(agent,json_data,options.outfile))
+    agent_handler.start()
     sock.close()
 
 if __name__ == '__main__':
