@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE
 import time
 import json
 import time
+import datetime
 
 host = 'localhost'
 port = 3000
@@ -16,28 +17,28 @@ def main():
         except Exception, e:
             print e
             time.sleep(1)
-    while True:
+    running = True
+    while running:
         try:
             request = json.loads(sock.recv(4096))
             print "Recieved: %s" % request
             command = request["command"]
             timeout = request["timeout"]
-            executed_at = time.time()
+            startTime = time.time()
+            executed_at = str(time.ctime(int(startTime)))
             proc = Popen(command, stdout=PIPE, stderr=PIPE)
             output, error = proc.communicate()
             exit_code = proc.returncode
-            execution_finished = time.time()
-            duration_ms = (execution_finished - executed_at) * 100
+            finishTime = time.time()
+            duration_ms = (finishTime - startTime) * 100
             result={"command":command, "executed_at":executed_at, "duration_ms":duration_ms, "exit_code":exit_code, "output":output, "error":error}
-            print result
         except Exception, e:
             output = 'Could not execute: %s' % request
-        #time.sleep(5)
+
         try:
             sock.sendall(json.dumps(result))
         except Exception, e:
-            print e
-            break
+            running = False
     sock.close()
 
 if __name__ == '__main__':
