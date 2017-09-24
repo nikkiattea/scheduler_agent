@@ -11,8 +11,6 @@ sock.listen(5)
 
 def handler(agent, json_data):
     print 'Recieved: %s' % agent
-    #sock_input = agent.makefile('r')
-
     for request in json_data:
         print 'Sending: %s' % request
         agent.sendall(json.dumps(request))
@@ -28,7 +26,6 @@ def main():
             json_data.append(json.loads(line))
         file.close()
 
-    json_data = [{"command": ["echo", "hello"], "timeout": 1000},{"command": ["echo", "world"], "timeout": 1000},{"command": ["echo", "!"], "timeout": 1000}]
     while True:
         agent,addr = sock.accept()
         print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)

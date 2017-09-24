@@ -33,7 +33,9 @@ def main():
             duration_ms = (finishTime - startTime) * 100
             result={"command":command, "executed_at":executed_at, "duration_ms":duration_ms, "exit_code":exit_code, "output":output, "error":error}
         except Exception, e:
-            output = 'Could not execute: %s' % request
+            error = str(e)
+            exit_code = -1
+            result={"command":command, "exit_code":exit_code, "error":error}
 
         try:
             sock.sendall(json.dumps(result))
