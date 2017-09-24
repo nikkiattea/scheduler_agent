@@ -11,20 +11,32 @@ sock.listen(5)
 
 def handler(agent, json_data):
     print 'Recieved: %s' % agent
+    json_result=[]
     for request in json_data:
         print 'Sending: %s' % request
         agent.sendall(json.dumps(request))
         result = json.loads(agent.recv(4096))
-        print 'Recieved task result: %s\n' % result
+        json_result.append(result)
+    writeResults(json_result)
     agent.close()
 
-def main():
+def writeResults(json_result):
+    with open('output.json', 'w') as outfile:
+        for line in json_result:
+            outfile.write(json.dumps(line)+"\n")
+        outfile.close()
+
+def readRequests(filename):
     json_data=[]
-    with open('input.json', 'r') as file:
-        for line in file:
+    with open(filename, 'r') as infile:
+        for line in infile:
             line = line.split("\n")[0]
             json_data.append(json.loads(line))
-        file.close()
+        infile.close()
+    return json_data
+
+def main():
+    json_data = readRequests('input.json')
 
     while True:
         agent,addr = sock.accept()
