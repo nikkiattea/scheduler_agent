@@ -1,22 +1,3 @@
-SETUP
-
-1. Download scheduler_agent
-2. cd scheduler_agent
-3. Run setup.sh (curl test content and change permissions on those files)
-
-RUN
-
-1. In terminal 1, start the scheduler with the following command. If no parameters are given, the default will be input.json and output.json. (run "python scheduler.py -h" for usage).
-  python scheduler.py -i input.json -o output.json
-    -OR-
-  python scheduler.py
-2. In terminal 2, start the agent with the following command.
-  python agent.py
-3. The scheduler and agent should exit cleanly once it has completed the Task Requests from input.json and written the Task Results to output.json.
-
-
-CHALLENGE
-
 For our distributed scheduler architecture, we have chosen to have an agent
 process that runs on each node in our network. It listens for connections on
 0.0.0.0:3000 from our scheduler. The scheduler will connect and submit tasks
