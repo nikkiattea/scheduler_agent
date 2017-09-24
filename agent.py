@@ -3,12 +3,19 @@ from subprocess import Popen, PIPE
 import time
 import json
 import time
-import datetime
 from threading import Timer
 
 host = 'localhost'
 port = 3000
 
+"""
+Runs a TaskRequest on the host, defined by the command and timeout.
+A successful TaskResult is defined by the command, executed_at,
+duration_ms, exit_code, output, and error.
+An unsuccessful TaskResult is definied by the command,
+exit_code, and error.
+Returns the TaskResult.
+"""
 def runCommandWithTimeout(request):
     try:
         command = request["command"]
@@ -38,6 +45,14 @@ def runCommandWithTimeout(request):
         result={"command":command, "exit_code":exit_code, "error":error}
     return result
 
+"""
+Agent will listen on TCP port 3000 until a
+connection with a scheduler is established.
+The agent will recieve TaskRequests, run them,
+and send the appropriate TaskResult back to
+the scheduler. Once the agent has stopped
+recieving requests, it will cleanly exit.
+"""
 def main():
     print "Waiting for scheduler to open..."
     while True:
