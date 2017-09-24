@@ -53,6 +53,7 @@ def main():
     json_data = readRequests(options.infile)
 
     while True:
+        print "Waiting for agent to open..."
         agent,addr = sock.accept()
         print 'Accepted connection from: %s:%d on port %d' % (addr[0], addr[1], port)
         agent_handler = threading.Thread(target=handler,args=(agent,json_data,options.outfile))

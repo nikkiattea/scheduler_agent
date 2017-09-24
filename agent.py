@@ -44,7 +44,7 @@ def main():
             sock.connect((host, port))
             break
         except Exception, e:
-            print e
+            print "Waiting for scheduler to open: %s"%str(e)
             time.sleep(1)
     running = True
     while running:
